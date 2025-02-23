@@ -54,27 +54,43 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: Color(0xFFFF6733),
       appBar: AppBar(
         backgroundColor: Color(0xFFFF6733),
-        title: Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 0,
-                blurRadius: 10,
-                offset: Offset(0, 50),
-              )
-            ],
-          ),
-          child: Center(
-            child: Text(
-              'जय श्री राम',
-              style: TextStyle(
-                fontSize: 50.sp,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(width: 20.sp),
+            Container(
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 0,
+                    blurRadius: 10,
+                    offset: Offset(0, 50),
+                  )
+                ],
+              ),
+              child: Center(
+                child: Text(
+                  'जय श्री राम',
+                  style: TextStyle(
+                    fontSize: 50.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
-          ),
+
+            // ------------
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.more_vert,
+                color: Colors.white,
+                size: 30.sp,
+              ),
+            ),
+          ],
         ),
       ),
       body: Padding(
