@@ -1,5 +1,6 @@
 import 'package:balagi_bhjans/constants/images.dart';
 import 'package:balagi_bhjans/widgets/bhjan_card.dart';
+import 'package:balagi_bhjans/widgets/drop_down.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -18,7 +19,7 @@ class HomeScreen extends StatelessWidget {
       'text': 'हनुमान चालीसा',
       'image': PImages.splashImage,
       'num': 2,
-      'audio': 'chalisa.mp3'
+      'audio': 'h.mp3'
     },
     {'text': 'सुंदरकांड', 'image': PImages.sundarkand, 'num': 3, 'audio': ''},
     {
@@ -82,14 +83,7 @@ class HomeScreen extends StatelessWidget {
             ),
 
             // ------------
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.more_vert,
-                color: Colors.white,
-                size: 30.sp,
-              ),
-            ),
+            DropDown()
           ],
         ),
       ),

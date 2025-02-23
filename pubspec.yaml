@@ -38,6 +38,8 @@ dependencies:
   go_router: ^14.8.0
   flutter_screenutil: ^5.9.3
   audioplayers: ^6.2.0
+  share_plus: ^10.1.4
+  url_launcher: ^6.3.1
   
 
 dev_dependencies:

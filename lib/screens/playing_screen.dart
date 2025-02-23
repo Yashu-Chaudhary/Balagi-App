@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:balagi_bhjans/provider/audio_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,7 +17,7 @@ class PlayingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audioProvider = Provider.of<AudioProvider>(context);
+    final audioProvider = Provider.of<AudioProvider>(context)..playAudio(audio);
     return Scaffold(
       backgroundColor: Color(0xFFFF6733),
       appBar: AppBar(
@@ -76,9 +75,9 @@ class PlayingScreen extends StatelessWidget {
               ),
               child: Slider(
                 value: audioProvider.position.inSeconds.toDouble(),
-                onChanged: (value) => audioProvider.handleSeek(value),
+                onChanged: (value) => audioProvider.seekAudio(value),
                 min: 0,
-                max: audioProvider.position.inSeconds.toDouble(),
+                max: audioProvider.duration.inSeconds.toDouble(),
               ),
             ),
 
@@ -87,11 +86,11 @@ class PlayingScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  audioProvider.formatDuration(audioProvider.position),
+                  audioProvider.formatTime(audioProvider.position),
                   style: TextStyle(color: Colors.white, fontSize: 18.sp),
                 ),
                 Text(
-                  audioProvider.formatDuration(audioProvider.duration),
+                  audioProvider.formatTime(audioProvider.duration),
                   style: TextStyle(color: Colors.white, fontSize: 18.sp),
                 ),
               ],
@@ -122,7 +121,7 @@ class PlayingScreen extends StatelessWidget {
                       color: Colors.white,
                       size: 80.sp,
                     ),
-                    onPressed: audioProvider.handlePlayPause),
+                    onPressed: () => audioProvider.togglePlayPause(audio)),
 
                 // Next Button
                 IconButton(
@@ -142,10 +141,4 @@ class PlayingScreen extends StatelessWidget {
       ),
     );
   }
-
-  // String _formatDuration(Duration duration) {
-  //   String minutes = duration.inMinutes.toString().padLeft(2, '0');
-  //   String seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
-  //   return "$minutes:$seconds";
-  // }
 }
