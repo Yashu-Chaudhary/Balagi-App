@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
       'text': 'श्री राम स्तुति',
       'image': PImages.ramjiIstuti,
       'num': 1,
-      'audio': ''
+      'audio': 'ramji_istuti.mp3'
     },
     {
       'text': 'हनुमान चालीसा',
