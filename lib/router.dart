@@ -22,6 +22,7 @@ GoRouter router = GoRouter(
       builder: (context, state) {
         final extra = state.extra as Map<String, dynamic>;
         return PlayingScreen(
+          index: extra['index']!,
           title: extra['title']!,
           image: extra['image']!,
           audio: extra['audio']!,

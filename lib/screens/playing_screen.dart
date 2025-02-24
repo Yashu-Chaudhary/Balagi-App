@@ -1,6 +1,7 @@
 import 'package:balagi_bhjans/provider/audio_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class PlayingScreen extends StatelessWidget {
@@ -9,16 +10,19 @@ class PlayingScreen extends StatelessWidget {
     required this.title,
     required this.image,
     required this.audio,
+    required this.index,
   });
 
   final String title;
   final String image;
   final String audio;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
+    // Initialize the audio on first build
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<AudioProvider>().playAudio(audio);
+      context.read<AudioProvider>().playAudio(audio, index);
     });
 
     return Scaffold(
@@ -47,7 +51,7 @@ class PlayingScreen extends StatelessWidget {
                 SizedBox(height: 80.sp),
                 _buildAudioSlider(audioProvider, context),
                 _buildTimeDisplay(audioProvider),
-                _buildControlButtons(audioProvider),
+                _buildControlButtons(audioProvider, context),
               ],
             ),
           );
@@ -112,10 +116,11 @@ class PlayingScreen extends StatelessWidget {
         overlayShape: const RoundSliderOverlayShape(overlayRadius: 14.0),
       ),
       child: Slider(
-        value: currentPosition.clamp(0, maxDuration),
-        onChanged: maxDuration > 0 ? (value) => audioProvider.seekAudio(value) : null,
+        value: currentPosition.clamp(0, maxDuration > 0 ? maxDuration : 0),
+        onChanged:
+            maxDuration > 0 ? (value) => audioProvider.seekAudio(value) : null,
         min: 0,
-        max: maxDuration,
+        max: maxDuration > 0 ? maxDuration : 1, // Prevent division by zero
       ),
     );
   }
@@ -139,37 +144,84 @@ class PlayingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildControlButtons(AudioProvider audioProvider) {
+  Widget _buildControlButtons(AudioProvider audioProvider, BuildContext context) {
+    // Check if previous button should be enabled
+    final hasPrevious = audioProvider.getPreviousBhajan() != null;
+    
+    // Check if next button should be enabled
+    final hasNext = audioProvider.getNextBhajan() != null;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        // Previous button
         IconButton(
           icon: Icon(
             Icons.skip_previous,
-            color: Colors.white,
+            color: hasPrevious ? Colors.white : Colors.white.withOpacity(0.5),
             size: 70.sp,
           ),
-          onPressed: null,
+          onPressed: hasPrevious ? () => _handlePrevious(context, audioProvider) : null,
         ),
+        
+        // Play/Pause button
         IconButton(
           icon: Icon(
             audioProvider.isPlaying
                 ? Icons.pause_circle_filled
                 : Icons.play_circle_filled,
-            color: Colors.white,
+            color: audio.isNotEmpty ? Colors.white : Colors.white.withOpacity(0.5),
             size: 80.sp,
           ),
-          onPressed: () => audioProvider.togglePlayPause(audio),
+          onPressed: audio.isNotEmpty ? () => audioProvider.togglePlayPause(audio) : null,
         ),
+        
+        // Next button
         IconButton(
           icon: Icon(
             Icons.skip_next,
-            color: Colors.white,
+            color: hasNext ? Colors.white : Colors.white.withOpacity(0.5),
             size: 70.sp,
           ),
-          onPressed: null,
+          onPressed: hasNext ? () => _handleNext(context, audioProvider) : null,
         ),
       ],
     );
+  }
+
+  // Handle previous button click
+  void _handlePrevious(BuildContext context, AudioProvider audioProvider) async {
+    final prevBhajan = await audioProvider.playPrevious();
+    
+    if (prevBhajan != null) {
+      // Stop current audio before navigation
+      await audioProvider.stopAudio();
+      
+      // Navigate to the previous bhajan
+      context.pushReplacement('/playing-screen', extra: {
+        'index': audioProvider.bhajanList.indexOf(prevBhajan),
+        'title': prevBhajan['text'],
+        'image': prevBhajan['image'],
+        'audio': prevBhajan['audio'],
+      });
+    }
+  }
+
+  // Handle next button click  
+  void _handleNext(BuildContext context, AudioProvider audioProvider) async {
+    final nextBhajan = await audioProvider.playNext();
+    
+    if (nextBhajan != null) {
+      // Stop current audio before navigation
+      await audioProvider.stopAudio();
+      
+      // Navigate to the next bhajan
+      context.pushReplacement('/playing-screen', extra: {
+        'index': audioProvider.bhajanList.indexOf(nextBhajan),
+        'title': nextBhajan['text'],
+        'image': nextBhajan['image'],
+        'audio': nextBhajan['audio'],
+      });
+    }
   }
 }

@@ -21,32 +21,42 @@ class HomeScreen extends StatelessWidget {
       'num': 2,
       'audio': 'h.mp3'
     },
-    {'text': 'सुंदरकांड', 'image': PImages.sundarkand, 'num': 3, 'audio': ''},
+    {
+      'text': 'ॐ जय जगदीश हरे',
+      'image': PImages.sundarkand,
+      'num': 3,
+      'audio': 'ohm jai jgdees hare.mp3'
+    },
     {
       'text': 'राम रक्षा स्तोत्र',
       'image': PImages.ramRakshaSutra,
       'num': 4,
-      'audio': ''
+      'audio': 'ram raksha sutra.mp3'
     },
     {
-      'text': 'अंजनी पुत्र स्तुति',
+      'text': 'हनुमानाष्टक',
       'image': PImages.anjaniPutraStuti,
       'num': 5,
-      'audio': ''
+      'audio': 'sankat mochan istuti.mp3'
     },
     {
       'text': 'रामायण आरती',
       'image': PImages.ramayanArti,
       'num': 6,
-      'audio': ''
+      'audio': 'arti shree ramayanji ki.mp3'
     },
     {
       'text': 'हनुमान जी आरती',
       'image': PImages.hanumnajiArti,
       'num': 7,
-      'audio': ''
+      'audio': 'hanumanji arti.mp3'
     },
-    {'text': 'बजरंग बाण', 'image': PImages.bajarangBaan, 'num': 8, 'audio': ''},
+    {
+      'text': 'बजरंग बाण',
+      'image': PImages.bajarangBaan,
+      'num': 8,
+      'audio': 'bajarang baan.mp3'
+    },
   ];
 
   @override
@@ -131,8 +141,10 @@ class HomeScreen extends StatelessWidget {
                   mainAxisSpacing: 8.sp,
                   childAspectRatio: 1.1,
                 ),
-                children: bhajanList.map(
-                  (bhajan) {
+                children: bhajanList.asMap().entries.map(
+                  (entry) {
+                    int index = entry.key;
+                    var bhajan = entry.value;
                     return BhjanCard(
                       text: bhajan['text'],
                       image: bhajan['image'],
@@ -141,6 +153,7 @@ class HomeScreen extends StatelessWidget {
                         context.push(
                           '/playing-screen',
                           extra: {
+                            'index': index,
                             'title': bhajan['text'],
                             'image': bhajan['image'],
                             'audio': bhajan['audio'],
