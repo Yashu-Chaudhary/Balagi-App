@@ -23,6 +23,17 @@ class PlayingScreen extends StatelessWidget {
     // Initialize the audio on first build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<AudioProvider>().playAudio(audio, index);
+
+      final audioProvider = context.read<AudioProvider>();
+      audioProvider.setOnTrackCompleteCallback((nextBhajan) {
+        context.pushReplacement('/playing-screen', extra: {
+          'index': audioProvider.bhajanList.indexOf(nextBhajan),
+          'title': nextBhajan['text'],
+          'image': nextBhajan['image'],
+          'audio': nextBhajan['audio'],
+        });
+      });
+      audioProvider.playAudio(audio, index);
     });
 
     return Scaffold(
@@ -59,6 +70,7 @@ class PlayingScreen extends StatelessWidget {
       ),
     );
   }
+  
 
   AppBar _buildAppBar() {
     return AppBar(
@@ -144,10 +156,11 @@ class PlayingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildControlButtons(AudioProvider audioProvider, BuildContext context) {
+  Widget _buildControlButtons(
+      AudioProvider audioProvider, BuildContext context) {
     // Check if previous button should be enabled
     final hasPrevious = audioProvider.getPreviousBhajan() != null;
-    
+
     // Check if next button should be enabled
     final hasNext = audioProvider.getNextBhajan() != null;
 
@@ -161,21 +174,26 @@ class PlayingScreen extends StatelessWidget {
             color: hasPrevious ? Colors.white : Colors.white.withOpacity(0.5),
             size: 70.sp,
           ),
-          onPressed: hasPrevious ? () => _handlePrevious(context, audioProvider) : null,
+          onPressed: hasPrevious
+              ? () => _handlePrevious(context, audioProvider)
+              : null,
         ),
-        
+
         // Play/Pause button
         IconButton(
           icon: Icon(
             audioProvider.isPlaying
                 ? Icons.pause_circle_filled
                 : Icons.play_circle_filled,
-            color: audio.isNotEmpty ? Colors.white : Colors.white.withOpacity(0.5),
+            color:
+                audio.isNotEmpty ? Colors.white : Colors.white.withOpacity(0.5),
             size: 80.sp,
           ),
-          onPressed: audio.isNotEmpty ? () => audioProvider.togglePlayPause(audio) : null,
+          onPressed: audio.isNotEmpty
+              ? () => audioProvider.togglePlayPause(audio)
+              : null,
         ),
-        
+
         // Next button
         IconButton(
           icon: Icon(
@@ -190,13 +208,14 @@ class PlayingScreen extends StatelessWidget {
   }
 
   // Handle previous button click
-  void _handlePrevious(BuildContext context, AudioProvider audioProvider) async {
+  void _handlePrevious(
+      BuildContext context, AudioProvider audioProvider) async {
     final prevBhajan = await audioProvider.playPrevious();
-    
+
     if (prevBhajan != null) {
       // Stop current audio before navigation
       await audioProvider.stopAudio();
-      
+
       // Navigate to the previous bhajan
       context.pushReplacement('/playing-screen', extra: {
         'index': audioProvider.bhajanList.indexOf(prevBhajan),
@@ -207,14 +226,14 @@ class PlayingScreen extends StatelessWidget {
     }
   }
 
-  // Handle next button click  
+  // Handle next button click
   void _handleNext(BuildContext context, AudioProvider audioProvider) async {
     final nextBhajan = await audioProvider.playNext();
-    
+
     if (nextBhajan != null) {
       // Stop current audio before navigation
       await audioProvider.stopAudio();
-      
+
       // Navigate to the next bhajan
       context.pushReplacement('/playing-screen', extra: {
         'index': audioProvider.bhajanList.indexOf(nextBhajan),

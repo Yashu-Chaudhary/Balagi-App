@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
       'image': PImages.splashImage,
       'num': 2,
       'audio': 'h.mp3'
-    },
+    }, 
     {
       'text': 'ॐ जय जगदीश हरे',
       'image': PImages.sundarkand,

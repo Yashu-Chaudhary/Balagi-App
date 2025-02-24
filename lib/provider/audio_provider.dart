@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:balagi_bhjans/constants/images.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +7,8 @@ import 'package:flutter/material.dart';
 class AudioProvider extends ChangeNotifier {
   final AudioPlayer _player = AudioPlayer();
   String? _currentAudio;
-  int _currentIndex = 0; // Changed to start from 0 for better array indexing
+  int _currentIndex = 0;
+  bool autoPlayEnabled = true;
 
   bool isPlaying = false;
   Duration position = Duration.zero;
@@ -85,9 +88,30 @@ class AudioProvider extends ChangeNotifier {
     );
 
     _player.onPlayerComplete.listen(
-      (_) {
-        isPlaying = false;
+      (_) async {
+        // isPlaying = false;
+        // position = Duration.zero;
+        // notifyListeners();
         position = Duration.zero;
+
+        if (autoPlayEnabled) {
+          final nextBhajan = getNextBhajan();
+          if (nextBhajan != null) {
+            int nextIndex = bhajanList.indexOf(nextBhajan);
+
+            if (_onTrackComplete != null) {
+              _onTrackComplete!(nextBhajan);
+            }
+
+            await playAudio(nextBhajan['audio'], nextIndex);
+            // notifyListeners();
+          } else {
+            isPlaying = false;
+            // notifyListeners();
+          }
+        } else {
+          isPlaying = false;
+        }
         notifyListeners();
       },
       onError: _handleError,
@@ -275,6 +299,30 @@ class AudioProvider extends ChangeNotifier {
       prevIndex--;
     }
     return null;
+  }
+
+  final _trackChangeController =
+      StreamController<Map<String, dynamic>>.broadcast();
+  Stream<Map<String, dynamic>> get onTrackChange =>
+      _trackChangeController.stream;
+
+// Call this when track changes to notify UI
+  // void _notifyTrackChange(Map<String, dynamic> bhajan) {
+  //   _trackChangeController.add(bhajan);
+  // }
+
+  Function(Map<String, dynamic>)? _onTrackComplete;
+  void setOnTrackCompleteCallback(Function(Map<String, dynamic>) callback) {
+    _onTrackComplete = callback;
+  }
+
+  void clearOnTrackCompleteCallback() {
+    _onTrackComplete = null;
+  }
+
+  void toggleAutoPlay() {
+    autoPlayEnabled = !autoPlayEnabled;
+    notifyListeners();
   }
 
   @override
