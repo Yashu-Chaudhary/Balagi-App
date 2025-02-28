@@ -8,7 +8,7 @@
 PRODUCT_NAME = balagi_bhjans
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.balagiBhjans
+PRODUCT_BUNDLE_IDENTIFIER = com.pychaudharytech.balagiBhjans
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2025 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2025 com.pychaudharytech. All rights reserved.

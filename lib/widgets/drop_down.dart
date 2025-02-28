@@ -22,7 +22,7 @@ class DropDown extends StatelessWidget {
 
   void _handleMenuSelection(String value, BuildContext context) async {
     // !change this with google account details
-    const String packageName = "com.example.yourapp";
+    const String packageName = "com.pychaudharytech.bhajansapp";
     const String developerId = "6766189598171769553";
     switch (value) {
       case 'Share':
