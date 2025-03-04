@@ -25,7 +25,7 @@ class SplashScreen extends StatelessWidget {
                   child: Text(
                     'जय श्री राम',
                     style: TextStyle(
-                      fontSize: 90.sp,
+                      fontSize: 70.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),

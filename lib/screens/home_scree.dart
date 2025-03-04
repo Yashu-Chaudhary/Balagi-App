@@ -1,9 +1,12 @@
+import 'package:balagi_bhjans/ad_manager/ad_manager.dart';
 import 'package:balagi_bhjans/constants/images.dart';
 import 'package:balagi_bhjans/widgets/bhjan_card.dart';
 import 'package:balagi_bhjans/widgets/drop_down.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -20,7 +23,7 @@ class HomeScreen extends StatelessWidget {
       'image': PImages.splashImage,
       'num': 2,
       'audio': 'h.mp3'
-    }, 
+    },
     {
       'text': 'ॐ जय जगदीश हरे',
       'image': PImages.sundarkand,
@@ -61,7 +64,17 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final adProvider = Provider.of<AdProvider>(
+      context,
+    );
     return Scaffold(
+      bottomNavigationBar: adProvider.isBannerAdLoaded
+          ? SizedBox(
+              width: adProvider.bannerAd.size.width.toDouble(),
+              height: adProvider.bannerAd.size.height.toDouble(),
+              child: AdWidget(ad: adProvider.bannerAd),
+            )
+          : null,
       backgroundColor: Color(0xFFFF6733),
       appBar: AppBar(
         backgroundColor: Color(0xFFFF6733),
